@@ -231,15 +231,28 @@
 
 // form
 document.getElementById("contact-form").addEventListener("submit", function(event) {
-  event.preventDefault(); // Empêche la soumission classique du formulaire
+  event.preventDefault();
 
-  var form = event.target;
-  var sentMessage = document.getElementById('sent-message');
+  const form = event.target;
+  const data = new FormData(form);
+  const sentMessage = document.getElementById('sent-message');
 
-  // Simuler l'envoi de formulaire (vous pourriez attendre la réponse du serveur)
-  setTimeout(function() {
-    form.reset(); // Réinitialise le formulaire
-    sentMessage.style.display = 'block'; // Affiche le message de confirmation
-  }, 2000); // Affiche le message après 2 secondes (vous pouvez ajuster ce délai)
+  fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(response => {
+    if (response.ok) {
+      form.reset();
+      sentMessage.style.display = 'block';
+    } else {
+      alert("❌ Une erreur est survenue lors de l'envoi.");
+    }
+  }).catch(error => {
+    alert("❌ Erreur réseau !");
+  });
 });
+
 
